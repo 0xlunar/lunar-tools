@@ -1,0 +1,13 @@
+[package]
+name = "lunar-tools"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+default = ["proxies", "wreq"]
+proxies = []
+wreq = ["dep:wreq"]
+
+[dependencies]
+itertools = "0.15.0"
+wreq = { version = "0.16.1", optional = true }
