@@ -17,7 +17,7 @@ where
 }
 
 pub struct HawkSettings {
-    pub check_interval: Duration
+    pub check_interval: Duration,
 }
 
 struct HawkItem {
@@ -34,7 +34,11 @@ impl<
 > Hawk<T, F>
 {
     pub fn new(settings: HawkSettings, tasks: Arc<RwLock<Vec<T>>>, create_task: F) -> Self {
-        Self { settings, tasks, create_task }
+        Self {
+            settings,
+            tasks,
+            create_task,
+        }
     }
 
     pub fn start(self) -> JoinHandle<()> {
@@ -49,10 +53,12 @@ impl<
                 drop(read_lock);
 
                 let mut seen_hashes = vec![];
-                for task in tasks { // each task
+                for task in tasks {
+                    // each task
                     let id = HawkHash::new(&task); // hash for its id
                     seen_hashes.push(id.0); // we've seen this id now
-                    if !active.iter().any(|active| active.id == id) { // if the id is new to active pool
+                    if !active.iter().any(|active| active.id == id) {
+                        // if the id is new to active pool
                         info!("[+] Adding task [{}]", id.0);
                         let handle = (hawk.create_task)(task); // create the handle
                         let item = HawkItem::new(id, handle);
@@ -61,7 +67,9 @@ impl<
                 }
 
                 active
-                    .extract_if(.., |item| seen_hashes.iter().all(|r_item| item.id.0 != *r_item)) // extract all ids that are no longer found in tasks and should be inactive
+                    .extract_if(.., |item| {
+                        seen_hashes.iter().all(|r_item| item.id.0 != *r_item)
+                    }) // extract all ids that are no longer found in tasks and should be inactive
                     .for_each(|item| {
                         info!("[-] Removing task [{}]", item.id.0);
                         item.handle.abort(); // abort the handle and drop the task
@@ -95,9 +103,9 @@ impl HawkHash {
 
 #[cfg(test)]
 mod test {
+    use crate::hawk::{Hawk, HawkSettings};
     use std::sync::Arc;
     use tokio::sync::RwLock;
-    use crate::hawk::{Hawk, HawkSettings};
 
     #[derive(Debug, Hash, Clone, Eq, PartialEq)]
     struct HashableItem;
