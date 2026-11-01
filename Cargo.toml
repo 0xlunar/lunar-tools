@@ -4,10 +4,14 @@ version = "0.1.0"
 edition = "2024"
 
 [features]
-default = ["proxies", "wreq"]
+default = ["proxies", "wreq", "hawk"]
 proxies = []
+hawk = ["dep:tokio"]
 wreq = ["dep:wreq"]
 
 [dependencies]
 itertools = "0.15.0"
+tokio = { version = "1.54.1", features = ["sync", "time", "macros", "test-util", "rt-multi-thread"], optional = true }
 wreq = { version = "0.16.1", optional = true }
+anyhow = "1.0.104"
+log = "0.4.35"

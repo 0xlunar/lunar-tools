@@ -1,3 +1,4 @@
+pub mod hawk;
 pub mod proxies;
 pub mod traits;
 

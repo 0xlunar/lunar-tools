@@ -52,7 +52,7 @@ impl Display for ProxyHost {
             ProxyHost::HTTP => f.write_str("http"),
             ProxyHost::HTTPS => f.write_str("https"),
             ProxyHost::SOCKS4 => f.write_str("socks4"),
-            ProxyHost::SOCKS5 => f.write_str("socks5")
+            ProxyHost::SOCKS5 => f.write_str("socks5"),
         }
     }
 }
