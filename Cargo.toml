@@ -2,6 +2,8 @@
 name = "lunar-tools"
 version = "0.1.0"
 edition = "2024"
+description = "Various tools used in my own projects"
+license = "AGPL-3"
 
 [features]
 default = ["proxies", "wreq", "hawk"]
