@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 description = "Various tools used in my own projects"
 license = "AGPL-3.0-only"
+repository = "https://github.com/0xlunar/lunar-tools"
 
 [features]
 default = ["proxies", "wreq", "hawk"]
