@@ -6,7 +6,7 @@
 use crate::proxies::ProxyError::{FileReadError, ProxyConversionError};
 use crate::traits::SplitAtNth;
 use itertools::{Either, Itertools};
-use std::fmt::{Display, Formatter, Write};
+use std::fmt::{Display, Formatter};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::sync::Arc;
@@ -70,7 +70,7 @@ pub fn load_proxies(file_name: &str) -> Result<Vec<Proxy>, Vec<ProxyError>> {
     let (proxies, errors): (Vec<Proxy>, Vec<ProxyError>) =
         lines
             .into_iter()
-            .partition_map(|line| match parse_line(&*line) {
+            .partition_map(|line| match parse_line(&line) {
                 Ok(proxy) => Either::Left(proxy),
                 Err(err) => Either::Right(err),
             });
@@ -91,7 +91,7 @@ fn load_file(file_name: &str) -> Result<File, ProxyError> {
 
 fn split_lines(file: File) -> Result<Vec<String>, ProxyError> {
     let buffer = BufReader::new(file);
-    Ok(buffer.lines().filter_map(|line| line.ok()).collect())
+    Ok(buffer.lines().map_while(Result::ok).collect())
 }
 
 fn parse_line(line: &str) -> Result<Proxy, ProxyError> {
